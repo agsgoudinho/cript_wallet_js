@@ -1,19 +1,20 @@
-if (!process.env.PORT)
+// let port = !process.env.PORT ? 3001 : process.env.PORT;
+
+if(!process.env.PORT)
     throw Error("Variável de ambiente PORT não informada");
 
 const port = process.env.PORT;
 
 const sha = require('sha256');
 const timestamp = Date.now();
-const randomNumber = Math.floor((Math.random() * 10000) + 1000)
+const randomNumber = Math.floor((Math.random() * 10000) + 1000);
 const myKey = sha(port + "" + timestamp + "" + randomNumber);
 
 const Peer = require("./Peer");
 const peer = new Peer(port);
+let isMiner = false
 
-if (process.argv.length < 2)
-
-process.argv.slice(2).forEach(
+process.argv.slice(2, 3).forEach(
     anotherPeerAddress => peer.connectTo(anotherPeerAddress)
 );
 
@@ -26,7 +27,7 @@ peer.onConnection = socket => {
     const firstPayload = {
         signature,
         message
-    }
+    };
 
     socket.write(JSON.stringify(firstPayload))
 };
@@ -37,7 +38,7 @@ process.stdin.on('data', data => {
 
     receivedMessageSignatures.push(signature);
 
-    peer.broadcast(JSON.stringify({ signature, message }));
+    peer.broadcast(JSON.stringify({signature, message}));
 });
 
 const receivedMessageSignatures = [myKey];
@@ -49,8 +50,10 @@ peer.onData = (socket, data) => {
     if (receivedMessageSignatures.includes(payload.signature))
         return;
 
-    receivedMessageSignatures.push(payload.signature)
+    receivedMessageSignatures.push(payload.signature);
 
-    console.log("recebido> ", payload.message)
+    console.log("recebido> ", payload.message);
+
+
     peer.broadcast(json);
 };
