@@ -1,9 +1,7 @@
 const crypto = require('crypto');
-const EC = require('elliptic').ec;
-const ec = new EC('secp256k1');
-const debug = require('debug')('savjeecoin:blockchain');
 
 module.exports = class Block {
+
     constructor(timestamp, transactions, previousHash = '') {
         this.previousHash = previousHash;
         this.timestamp = timestamp;
@@ -21,8 +19,6 @@ module.exports = class Block {
             this.nonce++;
             this.hash = this.calculateHash();
         }
-
-        debug(`Block mined: ${this.hash}`);
     }
 
     hasValidTransactions() {

@@ -10,6 +10,8 @@ const timestamp = Date.now();
 const randomNumber = Math.floor((Math.random() * 10000) + 1000);
 const myKey = sha(port + "" + timestamp + "" + randomNumber);
 
+const blockchain = require('./Blockchain');
+
 const Peer = require("./Peer");
 const peer = new Peer(port);
 let isMiner = '';
@@ -24,7 +26,7 @@ if (isMiner === '')
 
 
 peer.onConnection = socket => {
-    const message = "Hi !! I'm on port " + port + " is miner " + isMiner;
+    const message = "Hi !! I'm on port " + port + " is miner on connect " + isMiner;
     const signature = sha(message + myKey + Date.now());
 
     receivedMessageSignatures.push(signature);

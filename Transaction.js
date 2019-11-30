@@ -1,7 +1,6 @@
 const crypto = require('crypto');
 const EC = require('elliptic').ec;
 const ec = new EC('secp256k1');
-const debug = require('debug')('savjeecoin:blockchain');
 
 module.exports = class Transaction {
   

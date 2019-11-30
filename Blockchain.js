@@ -1,14 +1,14 @@
-const crypto = require('crypto');
 const EC = require('elliptic').ec;
-const ec = new EC('secp256k1');
-const debug = require('debug')('savjeecoin:blockchain');
+const Block = require('./Block');
 
 module.exports = class Blockchain {
+
     constructor() {
       this.chain = [this.createGenesisBlock()];
       this.difficulty = 2;
       this.pendingTransactions = [];
       this.miningReward = 100;
+      this.block = new Block()
     }
 
     createGenesisBlock() {
@@ -25,8 +25,7 @@ module.exports = class Blockchain {
   
       const block = new Block(Date.now(), this.pendingTransactions, this.getLatestBlock().hash);
       block.mineBlock(this.difficulty);
-  
-      debug('Block successfully mined!');
+
       this.chain.push(block);
   
       this.pendingTransactions = [];
@@ -50,7 +49,6 @@ module.exports = class Blockchain {
       }
   
       this.pendingTransactions.push(transaction);
-      debug('transaction added: %s', transaction);
     }
   
     getBalanceOfAddress(address) {
@@ -67,8 +65,7 @@ module.exports = class Blockchain {
           }
         }
       }
-  
-      debug('getBalanceOfAdrees: %s', balance);
+
       return balance;
     }
 
@@ -82,8 +79,7 @@ module.exports = class Blockchain {
           }
         }
       }
-  
-      debug('get transactions for wallet count: %s', txs.length);
+
       return txs;
     }
   
