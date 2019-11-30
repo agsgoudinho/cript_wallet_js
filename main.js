@@ -12,13 +12,16 @@ const myKey = sha(port + "" + timestamp + "" + randomNumber);
 
 const Peer = require("./Peer");
 const peer = new Peer(port);
-let isMiner = false;
+let isMiner = '';
 
 process.argv.slice(2, 3).forEach(
     anotherPeerAddress => peer.connectTo(anotherPeerAddress)
 );
 
-isMiner = process.argv.slice(3, 4);
+isMiner = process.argv.slice(3, 4)+'';
+if (isMiner === '')
+    isMiner = 'false';
+
 
 peer.onConnection = socket => {
     const message = "Hi !! I'm on port " + port + " is miner " + isMiner;
@@ -35,7 +38,7 @@ peer.onConnection = socket => {
 };
 
 process.stdin.on('data', data => {
-    const message = data.toString().replace(/\n/g, "");
+    const message =  " Is miner " + isMiner + ' Say ' + data.toString().replace(/\n/g, "");
     const signature = sha(message + myKey + Date.now());
 
     receivedMessageSignatures.push(signature);
